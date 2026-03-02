@@ -5,7 +5,7 @@ WORKDIR /app
 COPY api/main.py api/main.py
 COPY orchestrator orchestrator
 
-RUN pip install fastapi uvicorn redis celery
+RUN pip install fastapi uvicorn pika
 
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
 

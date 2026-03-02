@@ -1,10 +1,4 @@
 services:
-  redis:
-    image: redis:7
-    container_name: redis
-    ports:
-      - "6379:6379"
-
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -20,8 +14,9 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - redis
       - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
 
   worker:
     build:
@@ -29,5 +24,6 @@ services:
       dockerfile: worker/Dockerfile
     container_name: worker
     depends_on:
-      - redis
       - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq

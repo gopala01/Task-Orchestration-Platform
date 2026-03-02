@@ -1,24 +1,18 @@
 import time
 import os
-from celery import Celery
 from fastapi import FastAPI, HTTPException
 import uuid
 from orchestrator.state import create_job, get_job, update_state, cancel_job
 from orchestrator.models import JobState
+from orchestrator.queue import publish_job
 
 app = FastAPI(title="Job Orchestrator API")
-
-celery_app = Celery(
-    "api",
-    broker = os.getenv("CELERY_BROKER_URL"),
-    backend = os.getenv("REDIS_URL"),
-)
 
 @app.post("/jobs")
 def submit_job():
     job_id = str(uuid.uuid4())
     create_job(job_id)
-    celery_app.send_task("worker.run_job", args=[job_id])
+    publish_job(job_id)
     return {"job_id": job_id, "status": "created"}
 
 @app.get("/jobs/{job_id}")

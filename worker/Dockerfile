@@ -5,7 +5,7 @@ WORKDIR /app
 COPY worker/worker.py worker/worker.py
 COPY orchestrator orchestrator
 
-RUN pip install celery redis
+RUN pip install pika
 
 CMD ["sh", "-c", "sleep 10 && celery -A worker.worker worker --loglevel=info"]
 
