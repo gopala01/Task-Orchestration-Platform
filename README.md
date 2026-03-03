@@ -65,29 +65,6 @@ than execution details.
 
 ---
 
-## Kubernetes Deployment
-
-The system is deployed to Kubernetes using declarative manifests located in the `k8s/` directory.
-
-Each component runs as an independent Deployment:
-
-- `api` — FastAPI control plane
-- `worker` — Celery execution workers
-- `redis` — job state backend
-- `rabbitmq` — message broker
-
-Services communicate exclusively via Kubernetes DNS-based service discovery.
-Configuration is injected through environment variables, mirroring production
-container orchestration patterns.
-
-The API is exposed via a NodePort service for local cluster access, and all
-resources are isolated within a dedicated namespace.
-
-```bash
-kubectl apply -f k8s/
-kubectl port-forward svc/api 8000:8000 -n task-orchestration
-```
-
 ## Running the System
 
 ```bash
